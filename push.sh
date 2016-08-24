@@ -48,18 +48,19 @@ ensure_repo_exists() {
 }
 
 main() {
-  local docker_full_name="$(get_full_docker_name ${DOCKER_IMAGE})"
-  local destination_tag="$DOCKER_TAG"
+  local docker_full_name="$(get_full_docker_name ${TARGET_REPO})"
+  local destination_tag="$TARGET_TAG"
+  local registry="$(get_registry_endpoint)"
 
-  if [[ $DOCKER_DESTINATION_TAG ]]; then
-    destination_tag="$DOCKER_DESTINATION_TAG"
+  if [[ ! $destination_tag ]]; then
+    destination_tag="latest"
   fi
 
-  ensure_repo_exists ${DOCKER_IMAGE}
+  ensure_repo_exists ${TARGET_REPO}
 
   login_to_registry
-  docker tag $DOCKER_IMAGE:$DOCKER_TAG $docker_full_name:$destination_tag
-  docker push $docker_full_name:$destination_tag
+  docker tag $DOCKER_IMAGE $docker_full_name:$destination_tag
+  docker push ${docker_full_name}:${destination_tag}
 
   # Remove remote registry tag
   docker rmi $docker_full_name:$destination_tag

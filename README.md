@@ -11,11 +11,12 @@ ECR Pusher needs valid AWS credentials along with the docker image and tag you w
 ```
 docker run --privileged --rm \
   -v /var/run/docker.sock:/var/run/docker.sock \
-  -e "DOCKER_TAG=latest" \
-  -e "DOCKER_IMAGE=xxx" \
-  -e "AWS_ACCESS_KEY_ID=xxx" \
-  -e "AWS_SECRET_ACCESS_KEY=xxx" \
-  -e "AWS_SESSION_TOKEN=xxx" \
-  -e "AWS_DEFAULT_REGION=xxx" \
+  -e DOCKER_IMAGE=image:tag \
+  -e TARGET_REPO=xxx \
+  -e TARGET_TAG=xxx \
+  -e AWS_ACCESS_KEY_ID=xxx \
+  -e AWS_SECRET_ACCESS_KEY=xxx \
+  -e AWS_SESSION_TOKEN=xxx \
+  -e AWS_DEFAULT_REGION=xxx \
   bugcrowd/ecr-pusher
 ```
