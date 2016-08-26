@@ -6,7 +6,7 @@ aws configure set s3.signature_version s3v4
 
 login_to_registry() {
   local region="$(get_region)"
-  eval "$(aws ecr get-login)"
+  eval "$(aws ecr get-login --region ${region})"
 }
 
 get_region() {
@@ -36,14 +36,14 @@ get_full_docker_name() {
 ensure_repo_exists() {
   local repo_name="$1"
   local region="$(get_region)"
-  local search="$(aws ecr describe-repositories)"
+  local search="$(aws ecr describe-repositories --region ${region})"
   # Use jq filtering instead of specifying repo name to aws cli because a search with no results will
   # return with a non-zero exit code instead of an empty array
   local filtered_search="$(echo "$search" | jq -r ".repositories | map(select(.repositoryName==\"${repo_name}\"))")"
 
   if [[ $(echo "$filtered_search" | jq -r 'length') -eq 0 ]]; then
     echo "Creating docker repository ${repo_name}"
-    aws ecr create-repository --repository-name "${repo_name}"
+    aws ecr create-repository --repository-name "${repo_name}" --region ${region}
   fi
 }
 
