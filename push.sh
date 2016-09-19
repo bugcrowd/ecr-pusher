@@ -59,11 +59,17 @@ main() {
   ensure_repo_exists ${TARGET_REPO}
 
   login_to_registry
+
+  # Tag, push and untag
   docker tag $DOCKER_IMAGE $docker_full_name:$destination_tag
   docker push ${docker_full_name}:${destination_tag}
-
-  # Remove remote registry tag
   docker rmi $docker_full_name:$destination_tag
+
+  if [[ $TAG_AS_LATEST == "true" ]]; then
+    docker tag $DOCKER_IMAGE $docker_full_name:latest
+    docker push ${docker_full_name}:latest
+    docker rmi $docker_full_name:latest
+  fi
 }
 
 main "$@"
